@@ -1,19 +1,18 @@
 # ObanInsertAllUnique
 
-To start your Phoenix server:
+*Before following the setups below, be sure to install deps and run migrations.*
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+To reproduce the timeout, open the application with iex.
+```sh
+iex -S mix phx.server
+```
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Next, run the function that enqueues the jobs.
+```elixir
+iex> ObanInsertAllUnique.QueueJobs.enqueue()
+```
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Once this has run for a while, you will see the following error.
+```
+[error] Postgrex.Protocol (#PID<0.375.0>) disconnected: ** (DBConnection.ConnectionError) client #PID<0.538.0> timed out because it queued and checked out the connection for longer than 15000ms
+```
